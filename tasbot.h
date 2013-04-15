@@ -2,10 +2,10 @@
 #ifndef __TASBOT_H
 #define __TASBOT_H
 
-#include "../cc-lib/util.h"
-#include "../cc-lib/heap.h"
+#include "cc-lib/util.h"
+/*#include "../cc-lib/heap.h"*/
 
-#include "../cc-lib/base/stringprintf.h"
+#include "cc-lib/base/stringprintf.h"
 
 #ifdef __GNUC__
 #include <ext/hash_map>

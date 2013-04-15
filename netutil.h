@@ -7,9 +7,9 @@
 
 #include "tasbot.h"
 
-#include "SDL_net.h"
+#include <SDL/SDL_net.h>
 // for getlasterror, etc.
-#include "SDL_net/SDLnetsys.h"
+/*#include "SDL_net/SDLnetsys.h"*/
 #include "marionet.pb.h"
 #include "util.h"
 #include "errno.h"
@@ -391,7 +391,7 @@ bool ReadProto(TCPsocket sock, T *t) {
   int bytes = SDLNet_TCP_Recv(sock, (void *)&header, 4);
   if (4 != bytes) {
     fprintf(stderr, "ReadProto: Failed to read length (got %d), err %d.\n",
-            bytes, SDLNet_GetLastError());
+            bytes, errno);
     return false;
   }
 
@@ -407,7 +407,7 @@ bool ReadProto(TCPsocket sock, T *t) {
   int ret = sdlnet_recvall(sock, (void *)buffer, len);
   if (len != ret) {
     fprintf(stderr, "ReadProto: Failed to read %d bytes (got %d), err %d\n",
-            len, ret, SDLNet_GetLastError());
+            len, ret, errno);
     free(buffer);
     return false;
   }
@@ -438,7 +438,7 @@ bool WriteProto(TCPsocket sock, const T &t) {
   int ret = SDLNet_TCP_Send(sock, (const void *)header, 4);
   if (4 != ret) {
     fprintf(stderr, "Failed to send length (got %d) err %d.\n",
-            ret, SDLNet_GetLastError());
+            ret, errno);
     return false;
   }
 

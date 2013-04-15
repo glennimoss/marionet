@@ -8,8 +8,8 @@
 #include <sstream>
 
 #include "tasbot.h"
-#include "../cc-lib/arcfour.h"
-#include "../cc-lib/textsvg.h"
+#include "cc-lib/arcfour.h"
+#include "cc-lib/textsvg.h"
 #include "util.h"
 
 using namespace std;

@@ -16,7 +16,7 @@
 #include "fceu/state.h"
 
 #include "tasbot.h"
-#include "../cc-lib/city/city.h"
+#include <city.h>
 
 // XXX move to header, enable _debug mode.
 #define DCHECK(x) do {} while(0)

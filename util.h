@@ -10,7 +10,7 @@
 #include "time.h"
 
 #include "tasbot.h"
-#include "../cc-lib/arcfour.h"
+#include "cc-lib/arcfour.h"
 
 #define ANSI_RED "\x1B[1;31;40m"
 #define ANSI_GREY "\x1B[1;30;40m"

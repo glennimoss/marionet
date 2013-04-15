@@ -38,8 +38,8 @@
 #include "game.h"
 
 #if MARIONET
-#include "SDL.h"
-#include "SDL_net.h"
+#include <SDL/SDL.h>
+#include <SDL/SDL_net.h>
 #include "marionet.pb.h"
 #include "netutil.h"
 using ::google::protobuf::Message;

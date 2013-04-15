@@ -74,7 +74,9 @@ typedef uint32_t uint32;
 #endif
 
 #ifdef __GNUC__
- typedef unsigned long long uint64;
+ #include <stdint.h>
+ typedef uint64_t uint64;
+/*typedef unsigned long long int uint64;*/
  typedef uint64 u64;
  typedef long long int64;
  #define INLINE inline
