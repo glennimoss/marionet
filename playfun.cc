@@ -394,7 +394,7 @@ struct PlayFun {
 	  term.Output(line + "\n");
 
 	  // This thing prints.
-	  term.Advance();	
+	  term.Advance();
 	  TryImproveResponse res;
 	  DoTryImprove(req, &res);
 
@@ -579,7 +579,7 @@ struct PlayFun {
     }
 
     // XXX I think that some can produce more than iters outputs,
-    // so better could be greater than 100%. 
+    // so better could be greater than 100%.
     res->set_iters_tried(req.iters());
     res->set_iters_better(nimproved);
 
@@ -886,7 +886,7 @@ struct PlayFun {
 
       const int average_future_length = (int)((double)total_future_length /
 					      (double)futures.size());
-      
+
       Future fakefuture_hold;
       for (int z = 0; z < average_future_length; z++) {
 	fakefuture_hold.inputs.push_back(next.back());
@@ -1301,7 +1301,7 @@ struct PlayFun {
     }
 #endif
 
-    fprintf(stderr, "[MASTER] Beginning " 
+    fprintf(stderr, "[MASTER] Beginning "
 	    ANSI_YELLOW GAME ANSI_RESET ".\n");
 
     // This version of the algorithm looks like this. At some point in
@@ -1382,7 +1382,7 @@ struct PlayFun {
 	fprintf(stderr, "No more motifs (have %d todo).\n", todo.size());
 	break;
       }
-	
+
       todo.insert(make_pair(*motif, "backfill"));
     }
 
@@ -1517,7 +1517,7 @@ struct PlayFun {
 	r.score = res.score(j);
 	replacements->push_back(r);
       }
-      
+
       fprintf(log, "<li>%s: %d/%d</li>\n",
 	      TryImproveRequest::Approach_Name(req.approach()).c_str(),
 	      res.iters_better(),
@@ -1578,7 +1578,7 @@ struct PlayFun {
       fprintf(log,
 	      "<h2>Backtrack at iter %d, end frame %d, %s.</h2>\n",
 	      iters,
-	      
+
 	      movie.size(),
 	      TimeString(start_time).c_str());
       fflush(log);
@@ -1804,8 +1804,8 @@ int main(int argc, char *argv[]) {
   if (argc >= 2) {
     if (0 == strcmp(argv[1], "--helper")) {
       if (argc < 3) {
-	fprintf(stderr, "Need one port number after --helper.\n");
-	abort();
+        fprintf(stderr, "Need one port number after --helper.\n");
+        abort();
       }
       int port = atoi(argv[2]);
       fprintf(stderr, "Starting helper on port %d...\n", port);
@@ -1814,13 +1814,13 @@ int main(int argc, char *argv[]) {
     } else if (0 == strcmp(argv[1], "--master")) {
       vector<int> helpers;
       for (int i = 2; i < argc; i++) {
-	int hp = atoi(argv[i]);
-	if (!hp) {
-	  fprintf(stderr,
-		  "Expected a series of helper ports after --master.\n");
-	  abort();
-	}
-	helpers.push_back(hp);
+        int hp = atoi(argv[i]);
+        if (!hp) {
+          fprintf(stderr,
+            "Expected a series of helper ports after --master.\n");
+          abort();
+        }
+        helpers.push_back(hp);
       }
       pf.Master(helpers);
       fprintf(stderr, "master returned?\n");
