@@ -79,7 +79,7 @@ void SimpleFM2::WriteInputsWithSubtitles(const string &outputfile,
           "port1 1\n"
           "port2 0\n"
           // ?
-          "FDS 1\n"
+          "FDS 0\n"
           "comment author tasbot-simplefm2\n",
           romfilename.c_str(),
           romchecksum.c_str(),

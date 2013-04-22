@@ -137,6 +137,9 @@ test : emu_test objective_test weighted-objectives_test
 	time ./objective_test
 	time ./weighted-objectives_test
 
+marionet: $(OBJECTS) marionet.o
+	$(CXX) $^ -o $@ $(LFLAGS)
+
 clean :
 	rm -f learnfun playfun showfun *_test *.o $(EMUOBJECTS) $(CCLIBOBJECTS)
 
