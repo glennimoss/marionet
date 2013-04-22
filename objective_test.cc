@@ -11,7 +11,7 @@
 #include "objective.h"
 
 #ifdef MARIONET
-#include "SDL.h" 
+#include "SDL.h"
 #endif
 
 // Expected lex order is 0, 4, 1.
@@ -80,23 +80,23 @@ static void pr(const vector<int> &ordering) {
   printf("\n");
 }
 
-static void ignore(const vector<int> &ordering) {}
+static void noop(const vector<int> &ordering) {}
 
 static void FindCounterExample() {
   ArcFour rc("hello");
   for (int nmem = 1; nmem < 20; nmem++) {
     for (int size = 1; size < 20; size++) {
       for (int t = 0; t < 3000; t++) {
-	vector< vector<uint8> > memories;
-	for (int i = 0; i < nmem; i++) {
-	  vector<uint8> mem;
-	  for (int j = 0; j < size; j++) {
-	    mem.push_back(rc.Byte());
-	  }
-	  memories.push_back(mem);
-	}
-	Objective obj(memories);
-	obj.EnumerateFullAll(ignore, 1, 0);
+        vector< vector<uint8> > memories;
+        for (int i = 0; i < nmem; i++) {
+          vector<uint8> mem;
+          for (int j = 0; j < size; j++) {
+            mem.push_back(rc.Byte());
+          }
+          memories.push_back(mem);
+        }
+        Objective obj(memories);
+        obj.EnumerateFullAll(noop, 1, 0);
       }
     }
   }
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     Objective obj(memories);
     obj.EnumerateFullAll(pr, -1, 0);
   }
-  
+
   FindCounterExample();
 
   return 0;

@@ -1,7 +1,7 @@
 
 #include "simplefm2.h"
 
-#include "../cc-lib/util.h"
+#include "cc-lib/util.h"
 #include "tasbot.h"
 
 using namespace std;
@@ -11,19 +11,20 @@ vector<uint8> SimpleFM2::ReadInputs(const string &filename) {
   vector<uint8> out;
   for (int i = 0; i < contents.size(); i++) {
     const string &line = contents[i];
-    if (line.empty() || line[0] != '|')
+    if (line.empty() || line[0] != '|') {
       continue;
+    }
 
     // Parse the line.
     if (line.size() < 12) {
       fprintf(stderr, "Illegal line: [%s]\n", line.c_str());
       abort();
     }
-    
+
     if (!(line[1] == '0' ||
-	  (line[1] == '2' && out.empty()))) {
+          (line[1] == '2' && out.empty()))) {
       fprintf(stderr, "Command must be zero except hard "
-	      "reset in first input: [%s]\n", line.c_str());
+              "reset in first input: [%s]\n", line.c_str());
       abort();
     }
 
@@ -31,12 +32,12 @@ vector<uint8> SimpleFM2::ReadInputs(const string &filename) {
       |2|........|........||
       |0|....T...|........||
     */
-    
+
     const string player = line.substr(3, 8);
     uint8 command = 0;
     for (int j = 0; j < 8; j++) {
       if (player[j] != '.') {
-	command |= (1 << (7 - j));
+        command |= (1 << (7 - j));
       }
     }
     out.push_back(command);
@@ -46,43 +47,43 @@ vector<uint8> SimpleFM2::ReadInputs(const string &filename) {
 }
 
 void SimpleFM2::WriteInputs(const string &outputfile,
-			    const string &romfilename,
-			    const string &romchecksum,
-			    const vector<uint8> &inputs) {
+                            const string &romfilename,
+                            const string &romchecksum,
+                            const vector<uint8> &inputs) {
   vector<string> empty;
   WriteInputsWithSubtitles(outputfile, romfilename, romchecksum,
-			   inputs, empty);
+                           inputs, empty);
 }
 
 
 void SimpleFM2::WriteInputsWithSubtitles(const string &outputfile,
-					 const string &romfilename,
-					 const string &romchecksum,
-					 const vector<uint8> &inputs,
-					 const vector<string> &subtitles) {
+                                         const string &romfilename,
+                                         const string &romchecksum,
+                                         const vector<uint8> &inputs,
+                                         const vector<string> &subtitles) {
   // XXX Create one of these by hashing inputs.
   string fakeguid = "FDAEE33C-B32D-B38C-765C-FADEFACE0000";
   FILE *f = fopen(outputfile.c_str(), "wb");
   fprintf(f,
-	  "version 3\n"
-	  "emuversion 9815\n"
-	  "romFilename %s\n"
-	  "romChecksum %s\n"
-	  "guid %s\n"
-	  // Read from settings?
-	  "palFlag 0\n"
-	  "NewPPU 0\n"
-	  "fourscore 0\n"
-	  "microphone 0\n"
-	  "port0 1\n"
-	  "port1 1\n"
-	  "port2 0\n"
-	  // ?
-	  "FDS 1\n"
-	  "comment author tasbot-simplefm2\n",
-	  romfilename.c_str(),
-	  romchecksum.c_str(),
-	  fakeguid.c_str());
+          "version 3\n"
+          "emuversion 9815\n"
+          "romFilename %s\n"
+          "romChecksum %s\n"
+          "guid %s\n"
+          // Read from settings?
+          "palFlag 0\n"
+          "NewPPU 0\n"
+          "fourscore 0\n"
+          "microphone 0\n"
+          "port0 1\n"
+          "port1 1\n"
+          "port2 0\n"
+          // ?
+          "FDS 1\n"
+          "comment author tasbot-simplefm2\n",
+          romfilename.c_str(),
+          romchecksum.c_str(),
+          fakeguid.c_str());
 
   const string *last = NULL;
   for (int i = 0; i < subtitles.size(); i++) {
@@ -97,7 +98,7 @@ void SimpleFM2::WriteInputsWithSubtitles(const string &outputfile,
     static const char gamepad[] = "RLDUTSBA";
     for (int j = 0; j < 8; j++) {
       fprintf(f, "%c",
-	      (inputs[i] & (1 << (7 - j))) ? gamepad[j] : '.');
+              (inputs[i] & (1 << (7 - j))) ? gamepad[j] : '.');
     }
     fprintf(f, "|........||\n");
   }

@@ -40,7 +40,7 @@ void Motifs::Checkpoint(int framenum) {
   // PERF could maybe just remove spans here, which makes
   // printing much simpler and this data structure more
   // compact!
-  for (Weighted::iterator it = motifs.begin(); 
+  for (Weighted::iterator it = motifs.begin();
        it != motifs.end(); ++it) {
     it->second.history.push_back(make_pair(framenum, it->second.weight));
   }
@@ -69,7 +69,7 @@ Motifs *Motifs::LoadFromFile(const string &filename) {
 
 void Motifs::SaveToFile(const string &filename) const {
   string out;
-  for (Weighted::const_iterator it = motifs.begin(); 
+  for (Weighted::const_iterator it = motifs.begin();
        it != motifs.end(); ++it) {
     const vector<uint8> &inputs = it->first;
     string s = StringPrintf("%f ", it->second.weight);
@@ -153,7 +153,7 @@ const vector<uint8> &Motifs::RandomWeightedMotifWith(ArcFour *rrc) {
 
   // "index" into the continuous bins
   double sample = RandomDouble(rrc) * totalweight;
-  
+
   for (Weighted::const_iterator it = motifs.begin();
        it != motifs.end(); ++it) {
     if (sample <= it->second.weight) {
@@ -161,7 +161,7 @@ const vector<uint8> &Motifs::RandomWeightedMotifWith(ArcFour *rrc) {
     }
     sample -= it->second.weight;
   }
-  
+
   // Arbitrarily award roundoff errors to the first one.
   printf("roundoff error of %f in RandomWeightedMotif\n", sample);
   CHECK(!motifs.empty());
@@ -174,16 +174,16 @@ const vector<uint8> &Motifs::RandomWeightedMotif() {
 
 
 static string ShowRange(int lastframe, double val,
-			int thisframe) {
+      int thisframe) {
   int finframe = thisframe - 1;
   if (lastframe == finframe) {
     return StringPrintf("<span class=\"range\">%d:&nbsp;"
-			"<span class=\"value\">%.2f</span></span>", 
-			lastframe, val);
+      "<span class=\"value\">%.2f</span></span>",
+      lastframe, val);
   } else {
     return StringPrintf("<span class=\"range\">%d&ndash;%d:&nbsp;"
-			"<span class=\"value\">%.2f</span></span>",
-			lastframe, finframe, val);
+      "<span class=\"value\">%.2f</span></span>",
+      lastframe, finframe, val);
   }
 }
 
@@ -212,7 +212,7 @@ void Motifs::SaveHTML(const string &filename) const {
   for (int r = 0; r < resorted.size(); r++) {
     const vector<uint8> &inputs = resorted[r].inputs;
     const Info &info = resorted[r].info;
-    
+
     out += "<div class=\"motif\">\n"
       "<div class=\"inputs\">";
     string last = "";
@@ -220,9 +220,9 @@ void Motifs::SaveHTML(const string &filename) const {
       out += "<span class=\"input\">";
       string s = SimpleFM2::InputToColorString(inputs[i]);
       if (s == last) {
-	out += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        out += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       } else {
-	out += s;
+        out += s;
       }
       last = s;
       out += "</span> ";
@@ -230,23 +230,23 @@ void Motifs::SaveHTML(const string &filename) const {
     out += "</div>\n";
     out += "<div class=\"values\">\n";
     out += StringPrintf("<span class=\"picked\">%d</span>",
-			info.picked);
+      info.picked);
     // XXX this is really garbage code. Probably not even correct.
     if (!info.history.empty()) {
       int lastframe = info.history[0].first;
       double lastval = info.history[0].second;
       for (int i = 1; i < info.history.size(); i++) {
-	if (lastval != info.history[i].second) {
-	  out += ShowRange(lastframe, lastval,
-			   info.history[i].first);
-	  lastframe = info.history[i].first;
-	  lastval = info.history[i].second;
-	}
+        if (lastval != info.history[i].second) {
+          out += ShowRange(lastframe, lastval,
+              info.history[i].first);
+          lastframe = info.history[i].first;
+          lastval = info.history[i].second;
+        }
       }
       if (info.history.size() == 1 ||
-	  lastframe != info.history.back().first) {
-	out += ShowRange(lastframe, lastval, 
-			 info.history.back().first + 1);
+          lastframe != info.history.back().first) {
+        out += ShowRange(lastframe, lastval,
+            info.history.back().first + 1);
       }
     }
     out += "</div>\n";  // values

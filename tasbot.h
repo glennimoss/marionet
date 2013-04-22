@@ -1,4 +1,3 @@
-
 #ifndef __TASBOT_H
 #define __TASBOT_H
 
@@ -7,13 +6,14 @@
 
 #include "cc-lib/base/stringprintf.h"
 
-#ifdef __GNUC__
-#include <ext/hash_map>
-#include <ext/hash_set>
-#else
-#include <hash_map>
-#include <hash_set>
-#endif
+/*
+# ifdef __GNUC__
+# include <ext/hash_map>
+# include <ext/hash_set>
+# else
+# include <hash_map>
+# include <hash_set>
+# endif
 
 #ifdef __GNUC__
 namespace std {
@@ -30,6 +30,7 @@ struct hash< unsigned long long > {
 };
 }
 #endif
+*/
 
 // TODO: Use good logging package.
 #define CHECK(condition) \

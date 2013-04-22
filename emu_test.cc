@@ -23,8 +23,8 @@
 #include "fceu/fceu.h"
 #include "fceu/types.h"
 
-#include "../cc-lib/util.h"
-#include "../cc-lib/timer.h"
+#include "cc-lib/util.h"
+#include "cc-lib/timer.h"
 
 #include "simplefm2.h"
 #include "emulator.h"
@@ -39,7 +39,7 @@ static void CheckLoc(int frame, uint32 expected) {
     (RAM[0x0083]);
   if (loc != expected) {
     fprintf(stderr, "At frame %d, expected %u, got %u\n",
-	    frame, expected, loc);
+            frame, expected, loc);
     abort();
   }
 }
@@ -80,7 +80,8 @@ int main(int argc, char *argv[]) {
   // loop playing the game
   vector<uint8> inputs = SimpleFM2::ReadInputs("karate.fm2");
 
-  vector<uint8> basis = BasisUtil::LoadOrComputeBasis(inputs, 4935, "karate.basis");
+  vector<uint8> basis = BasisUtil::LoadOrComputeBasis(inputs, 4935,
+      "karate.basis");
 
   // The nth savestate is from before issuing the nth input.
   vector< vector<uint8> > savestates;
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
   // XXXXXX
   // inputs.resize(10);
 
-  fprintf(stderr, "Running %d steps...\n", inputs.size());
+  fprintf(stderr, "Running %lu steps...\n", inputs.size());
   for (int i = 0; i < inputs.size(); i++) {
     // XXX don't think this should ever happen.
     if (!GameInfo) {
@@ -132,8 +133,8 @@ int main(int argc, char *argv[]) {
   if (0x30ea6ab51357e746 == Emulator::RamChecksum()) {
     fprintf(stderr, "Memory OK.\n");
   } else {
-    fprintf(stderr, "WRONG CHECKSUM %x\n",
-	    Emulator::RamChecksum());
+    fprintf(stderr, "WRONG CHECKSUM %lx\n",
+            Emulator::RamChecksum());
     return -1;
   }
 
@@ -155,17 +156,17 @@ int main(int argc, char *argv[]) {
     if (frame + 1 < savestates.size()) {
       const vector<uint8> &expected = savestates[frame + 1];
       if (res != expected) {
-	fprintf(stderr, "Got a different savestate from frame %d to %d.\n",
-		frame, frame + 1);
-	abort();
+        fprintf(stderr, "Got a different savestate from frame %d to %d.\n",
+                frame, frame + 1);
+        abort();
       }
     }
   }
   fprintf(stderr, "Savestates are ok.\n");
 
-  fprintf(stderr, "Total for %d savestates: %.2fmb (avg %.2f bytes)\n",
+  fprintf(stderr, "Total for %lu savestates: %.2fmb (avg %.2f bytes)\n",
           savestates.size(), ss_total / (1024.0 * 1024.0),
-	  ss_total / (double)savestates.size());
+          ss_total / (double)savestates.size());
 
   // Again with caching.
   Emulator::ResetCache(100, 10);
@@ -181,10 +182,10 @@ int main(int argc, char *argv[]) {
     if (frame + 1 < savestates.size()) {
       const vector<uint8> &expected = savestates[frame + 1];
       if (res != expected) {
-	fprintf(stderr, "Got a different savestate from "
-		"frame %d to %d. (caching version)\n",
-		frame, frame + 1);
-	abort();
+        fprintf(stderr, "Got a different savestate from "
+                "frame %d to %d. (caching version)\n",
+                frame, frame + 1);
+        abort();
       }
     }
   }
@@ -201,10 +202,10 @@ int main(int argc, char *argv[]) {
     if (frame + 1 < savestates.size()) {
       const vector<uint8> &expected = savestates[frame + 1];
       if (res != expected) {
-	fprintf(stderr, "Got a different savestate from "
-		"frame %d to %d. (caching version #2)\n",
-		frame, frame + 1);
-	abort();
+        fprintf(stderr, "Got a different savestate from "
+                "frame %d to %d. (caching version #2)\n",
+                frame, frame + 1);
+        abort();
       }
     }
   }
@@ -221,9 +222,9 @@ int main(int argc, char *argv[]) {
       cxsum += RAM[i % 0x800];
     }
     steps.Stop();
-    fprintf(stderr, "%.8f seconds per step %d\n", 
-	    (double)steps.Seconds() / (double)kNumSteps,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per step %lu\n",
+            (double)steps.Seconds() / (double)kNumSteps,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -237,9 +238,9 @@ int main(int argc, char *argv[]) {
       cxsum += RAM[i % 0x800];
     }
     steps.Stop();
-    fprintf(stderr, "%.8f seconds per caching step (miss)%d\n", 
-	    (double)steps.Seconds() / (double)kNumSteps,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per caching step (miss)%lu\n",
+            (double)steps.Seconds() / (double)kNumSteps,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -252,9 +253,9 @@ int main(int argc, char *argv[]) {
       cxsum += RAM[i % 0x800];
     }
     steps.Stop();
-    fprintf(stderr, "%.8f seconds per caching step (hit)%d\n", 
-	    (double)steps.Seconds() / (double)kNumSteps,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per caching step (hit)%lu\n",
+            (double)steps.Seconds() / (double)kNumSteps,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -267,9 +268,9 @@ int main(int argc, char *argv[]) {
       cxsum += RAM[i % 0x800];
     }
     loads.Stop();
-    fprintf(stderr, "%.8f seconds per Load (regular) %d\n", 
-	    (double)loads.Seconds() / (double)kNumLoads,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per Load (regular) %lu\n",
+            (double)loads.Seconds() / (double)kNumLoads,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -284,9 +285,9 @@ int main(int argc, char *argv[]) {
       cxsum += saveme[i % saveme.size()];
     }
     saves.Stop();
-    fprintf(stderr, "%.8f seconds per Save (regular) %d\n", 
-	    (double)saves.Seconds() / (double)kNumSaves,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per Save (regular) %lu\n",
+            (double)saves.Seconds() / (double)kNumSaves,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -301,9 +302,9 @@ int main(int argc, char *argv[]) {
       cxsum += RAM[i % 0x800];
     }
     loads.Stop();
-    fprintf(stderr, "%.8f seconds per Load (uncompressed) %d\n", 
-	    (double)loads.Seconds() / (double)kNumLoads,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per Load (uncompressed) %lu\n",
+            (double)loads.Seconds() / (double)kNumLoads,
+            cxsum);
   }
 
   Emulator::Load(&beginning);
@@ -318,9 +319,9 @@ int main(int argc, char *argv[]) {
       cxsum += saveme[i % saveme.size()];
     }
     saves.Stop();
-    fprintf(stderr, "%.8f seconds per Save (uncompressed) %d\n", 
-	    (double)saves.Seconds() / (double)kNumSaves,
-	    cxsum);
+    fprintf(stderr, "%.8f seconds per Save (uncompressed) %lu\n",
+            (double)saves.Seconds() / (double)kNumSaves,
+            cxsum);
   }
 
   Emulator::Shutdown();

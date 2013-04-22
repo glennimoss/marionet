@@ -104,12 +104,7 @@ OBJECTS=$(BASEOBJECTS) $(EMUOBJECTS) $(TASBOT_OBJECTS)
 %.pb.h: %.proto
 	$(PROTOC) $< --cpp_out=.
 
-# without static, can't find lz or lstdcxx maybe?
-#LFLAGS =  -m64 -Wl,--subsystem,console $(LINKNETWORKING) -lz $(OPT) $(FLTO) $(PROFILE) -static
 LFLAGS =  -m64 $(LINK_LIBS) $(OPT) $(FLTO) $(PROFILE)
-# -Wl,--subsystem,console
-# -static -fwhole-program
-# -static
 
 learnfun.o: game.h
 
@@ -138,12 +133,12 @@ weighted-objectives_test : $(BASEOBJECTS) weighted-objectives.o weighted-objecti
 	$(CXX) $^ -o $@ $(LFLAGS)
 
 test : emu_test objective_test weighted-objectives_test
-	time ./emu_test
+	#time ./emu_test
 	time ./objective_test
 	time ./weighted-objectives_test
 
 clean :
-	rm -f learnfun playfun showfun *_test *.o $(EMUOBJECTS) $(CCLIBOBJECTS) gmon.out
+	rm -f learnfun playfun showfun *_test *.o $(EMUOBJECTS) $(CCLIBOBJECTS)
 
 veryclean : clean cleantas
 

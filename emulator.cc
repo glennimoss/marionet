@@ -37,8 +37,8 @@ struct StateCache {
     size_t operator ()(const Key &k) const {
       CHECK(k.second);
       return CityHash64WithSeed((const char *)&(k.second->at(0)),
-				k.second->size(),
-				k.first);
+        k.second->size(),
+        k.first);
     }
   };
 
@@ -47,21 +47,21 @@ struct StateCache {
   struct KeyEquals {
     size_t operator ()(const Key &l, const Key &r) const {
       return l.first == r.first &&
-	*l.second == *r.second;
+  *l.second == *r.second;
     }
   };
 
   typedef unordered_map<Key, Value, HashFunction, KeyEquals> Hash;
 
-  StateCache() : limit(0ULL), count(0ULL), next_sequence(0ULL), 
-		 slop(10000ULL), hits(0ULL), misses(0ULL) {
+  StateCache() : limit(0ULL), count(0ULL), next_sequence(0ULL),
+     slop(10000ULL), hits(0ULL), misses(0ULL) {
   }
 
   void Resize(uint64 ll, uint64 ss) {
     printf("Resize cache %d %d\n", ll, ss);
     // Recover memory.
-    for (Hash::iterator it = hashtable.begin(); 
-	 it != hashtable.end(); /* in loop */) {
+    for (Hash::iterator it = hashtable.begin();
+   it != hashtable.end(); /* in loop */) {
       Hash::iterator next(it);
       ++next;
       delete it->first.second;
@@ -81,12 +81,12 @@ struct StateCache {
 
   // Assumes it's not present. If it is, then you'll leak.
   void Remember(uint8 input, const vector<uint8> &start,
-		const vector<uint8> &result) {
+    const vector<uint8> &result) {
     vector<uint8> *startcopy = new vector<uint8>(start),
                   *resultcopy = new vector<uint8>(result);
     pair<Hash::iterator, bool> it =
-      hashtable.insert(make_pair(make_pair(input, startcopy), 
-				 make_pair(next_sequence++, resultcopy)));
+      hashtable.insert(make_pair(make_pair(input, startcopy),
+         make_pair(next_sequence++, resultcopy)));
     CHECK(it.second);
     DCHECK(NULL != GetKnownResult(input, *startcopy));
     DCHECK(NULL != GetKnownResult(input, start));
@@ -120,31 +120,31 @@ struct StateCache {
       all_sequences.reserve(count);
 
       // First pass, get the num_to_remove oldest (lowest) sequences.
-      for (Hash::const_iterator it = hashtable.begin(); 
-	   it != hashtable.end(); ++it) {
-	all_sequences.push_back(it->second.first);
+      for (Hash::const_iterator it = hashtable.begin();
+     it != hashtable.end(); ++it) {
+  all_sequences.push_back(it->second.first);
       }
       std::sort(all_sequences.begin(), all_sequences.end());
-      
+
       CHECK(num_to_remove < all_sequences.size());
       const uint64 minseq = all_sequences[num_to_remove];
 
       // printf("Removing everything below %d\n", minseq);
 
-      for (Hash::iterator it = hashtable.begin(); it != hashtable.end(); 
-	   /* in loop */) {
-	if (it->second.first < minseq) {
-	  Hash::iterator next(it);
-	  ++next;
-	  delete it->first.second;
-	  delete it->second.second;
-	  // Note g++ does not return the "next" iterator.
-	  hashtable.erase(it);
-	  count--;
-	  it = next;
-	} else {
-	  ++it;
-	}
+      for (Hash::iterator it = hashtable.begin(); it != hashtable.end();
+     /* in loop */) {
+  if (it->second.first < minseq) {
+    Hash::iterator next(it);
+    ++next;
+    delete it->first.second;
+    delete it->second.second;
+    // Note g++ does not return the "next" iterator.
+    hashtable.erase(it);
+    count--;
+    it = next;
+  } else {
+    ++it;
+  }
       }
       // printf("Size is now %d (internally %d)\n", count, hashtable.size());
     }
@@ -152,9 +152,9 @@ struct StateCache {
 
   void PrintStats() {
     printf("Current cache size: %ld / %ld. next_seq %ld\n"
-	   "%ld hits and %ld misses\n", 
-	   count, limit, next_sequence,
-	   hits, misses);
+     "%ld hits and %ld misses\n",
+     count, limit, next_sequence,
+     hits, misses);
   }
 
   Hash hashtable;
@@ -240,7 +240,7 @@ int LoadGame(const char *path) {
   if(!DriverInitialize(GameInfo)) {
     return(0);
   }
-	
+
   // Set NTSC (1 = pal)
   FCEUI_SetVidSystem(GIV_NTSC);
 
@@ -291,7 +291,7 @@ bool Emulator::Initialize(const string &romfile) {
   // and FCEUD_SetInput
   // Calling FCEUI_SetInputFC ((ESIFC) CurInputType[2], InputDPtr, attrib);
   //   and FCEUI_SetInputFourscore ((eoptions & EO_FOURSCORE) != 0);
-	
+
   // No HUD recording to AVI.
   FCEUI_SetAviEnableHUDrecording(false);
 
@@ -316,8 +316,8 @@ bool Emulator::Initialize(const string &romfile) {
   // Defaults.
   const int scanlinestart = 0, scanlineend = 239;
 
-  FCEUI_SetRenderedLines(scanlinestart + 8, scanlineend - 8, 
-			 scanlinestart, scanlineend);
+  FCEUI_SetRenderedLines(scanlinestart + 8, scanlineend - 8,
+       scanlinestart, scanlineend);
 
 
   {
@@ -415,8 +415,8 @@ void Emulator::SaveEx(vector<uint8> *state, const vector<uint8> *basis) {
   // Make sure there is contiguous space. Need room for header too.
   state->resize(4 + comprlen);
 
-  if (Z_OK != compress2(&(*state)[4], &comprlen, &raw[0], len, 
-			Z_DEFAULT_COMPRESSION)) {
+  if (Z_OK != compress2(&(*state)[4], &comprlen, &raw[0], len,
+      Z_DEFAULT_COMPRESSION)) {
     fprintf(stderr, "Couldn't compress.\n");
     abort();
   }
@@ -424,7 +424,7 @@ void Emulator::SaveEx(vector<uint8> *state, const vector<uint8> *basis) {
   *(uint32*)&(*state)[0] = len;
 
   // Trim to what we actually needed.
-  // PERF: This almost certainly does not actually free the memory. 
+  // PERF: This almost certainly does not actually free the memory.
   // Might need to copy.
   state->resize(4 + comprlen);
 }
@@ -434,9 +434,9 @@ void Emulator::LoadEx(vector<uint8> *state, const vector<uint8> *basis) {
   int uncomprlen = *(uint32*)&(*state)[0];
   vector<uint8> uncompressed;
   uncompressed.resize(uncomprlen);
- 
+
   switch (uncompress(&uncompressed[0], (uLongf*)&uncomprlen,
-		     &(*state)[4], state->size() - 4)) {
+         &(*state)[4], state->size() - 4)) {
   case Z_OK: break;
   case Z_BUF_ERROR:
     fprintf(stderr, "Not enough room in output\n");
@@ -452,7 +452,7 @@ void Emulator::LoadEx(vector<uint8> *state, const vector<uint8> *basis) {
     break;
   }
   // fprintf(stderr, "After uncompression: %d\n", uncomprlen);
-  
+
   // Why doesn't this equal the result from before?
   uncompressed.resize(uncomprlen);
 
